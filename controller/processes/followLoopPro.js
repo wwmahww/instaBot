@@ -9,20 +9,22 @@ const path = require('../../utils/direction');
 module.exports = (counter, currentPage) => {
   return new Promise(
     catchAsync(async (resolve, reject) => {
-      // counter contains <round> and <hasfollowed>
       console.log('loop is started.');
-      console.log('counter: ', counter);
       while (counter.hasFollowed <= web.limit) {
         console.log('loop 1');
         let buttons = await web.page.$$('button');
-        for (let i = counter.round; i < buttons.length; i++) {
+        let pageLinks = await web.page.$$('a[title]');
+        while (counter.round < buttons.length) {
+          console.log('loop 2');
+          console.log(counter);
           if (!buttons) {
             buttons = await web.page.$$('button');
-            linkPage = await web.page.$$('a[title]');
+            pageLinks = await web.page.$$('a[title]');
           }
-          let button = buttons[i];
+          console.log('buttons lenght: ', buttons.length);
+          let button = buttons[counter.round];
 
-          let buttenText = await web.page.evaluate(
+          let buttonText = await web.page.evaluate(
             button => button.textContent,
             button
           );
@@ -31,26 +33,31 @@ module.exports = (counter, currentPage) => {
           //   linkPage[i]
           // );
 
-          console.log('text: ', buttenText);
-          if (buttenText === 'Follow') {
-            let isFollowed = await subFollow(
-              linkPage[i],
-              web.notFollowBusinessPage,
-              web.notFollowPrivatePage
-            );
+          console.log('text: ', buttonText);
+          if (buttonText === 'Follow') {
+            let isFollowed = await subFollow(pageLinks[counter.round]);
             if (isFollowed) {
               counter.hasFollowed++;
-              if (likeLastPost) {
+              if (web.likeLastPost) {
                 await likeLastPost();
               }
-              if (counter.hasFollowed >= web.limit) break;
             }
             console.log('is followed: ', isFollowed);
+            if (counter.hasFollowed >= web.limit) break;
             buttons = false;
             // Go to  main page again
-            await act.loadPage(currentPage);
-            await web.page.waitFor(2000);
-            await path.click('//a[contains(., "followers")]', 'img', 10000);
+            let permission = false;
+            while (!permission) {
+              await act.loadPage(currentPage);
+              await web.page.waitFor(2000);
+              await path
+                .click('//a[contains(., "followers")]', 'li canvas', 10000)
+                .then(res => {
+                  permission = res;
+                  console.log('res: ', permission);
+                });
+            }
+            console.log('loaded');
             await web.page.waitFor(2000);
           }
           counter.round++;

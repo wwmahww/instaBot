@@ -98,12 +98,16 @@ exports.like = () => {
   return new Promise(
     catchAsync(async (resolve, reject) => {
       console.log('like start.');
+      await web.page.waitFor(2000);
       const isLikable = await web.page.$('svg[aria-label="Like"]');
       // If you haven't liked this post
       if (isLikable) {
         await web.page.click('svg[aria-label="Like"]');
+        console.log('done');
+        resolve();
+        return;
       }
-      console.log('done');
+      console.log('faild');
       resolve();
     })
   );
@@ -118,14 +122,12 @@ exports.comment = () => {
 
       let done = false;
 
-      await web.page.evaluate(
-        () => (document.getElementsByTagName('textarea')[0].value = '')
-      );
       await web.page.click('textarea');
-      await web.page.keyboard.type(web.comment_text, { delay: 20 });
+      await web.page.keyboard.type(web.comment_text, { delay: 30 });
 
       while (!done) {
         await web.page.click('button[type="submit"]');
+        await web.page.waitFor(2000);
         await web.page
           .waitFor(`//a[contains(., ${web.username})]`, 3000)
           .then(() => {

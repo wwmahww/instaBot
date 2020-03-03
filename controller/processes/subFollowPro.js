@@ -3,7 +3,7 @@ const web = require('../../utils/interfaces');
 const _error = require('../../utils/errorClass');
 const catchAsync = require('../../utils/catchAsync');
 
-module.exports = (pageLink, notFollowBusiness, notFollowPrivate) => {
+module.exports = pageLink => {
   return new Promise(
     catchAsync(async (resolve, reject) => {
       console.log('subFollow is started.');
@@ -17,7 +17,7 @@ module.exports = (pageLink, notFollowBusiness, notFollowPrivate) => {
       console.log('subFollow');
       await pageLink.click(); // go to the page
       await web.page.waitFor(3000);
-      await path.click('', '//button[contains(.,"Follow")]');
+      await path.click('', '//button[contains(.,"Follow")]'); // refresh page
       await web.page.waitFor(1000);
       console.log('reload');
 
@@ -36,8 +36,8 @@ module.exports = (pageLink, notFollowBusiness, notFollowPrivate) => {
         hasPost
       );
 
-      if (notFollowBusiness & isBusiness) shouldFollow = false;
-      if (notFollowPrivate & isPrivate) shouldFollow = false;
+      if (web.notFollowBusinessPage & isBusiness) shouldFollow = false;
+      if (web.notFollowPrivatePage & isPrivate) shouldFollow = false;
       if (hasPost === '0') shouldFollow = false;
 
       // shouldFollow = notFollowBusiness & !isPrivate?true:false
@@ -45,11 +45,10 @@ module.exports = (pageLink, notFollowBusiness, notFollowPrivate) => {
       if (shouldFollow) {
         let button = await web.page.$x('//button[contains(.,"Follow")]');
         await button[0].click();
-        web.page.waitFor('//button[contains(.,"Follow")]');
       }
 
       console.log('is page followd: ', shouldFollow);
-      await web.page.waitFor(2000);
+      await web.page.waitFor(3000);
       resolve(shouldFollow);
     })
   );

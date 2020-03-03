@@ -25,6 +25,8 @@ exports.click = (
     catchAsync(async (resolve, reject) => {
       let link;
       let click = 'click';
+      let success = false;
+      // Determin what is element --------------------------------------------------------------------
       if (typeof element === 'object') {
         link = element;
         console.log('element is an object');
@@ -41,7 +43,7 @@ exports.click = (
         link = web.page;
         click = 'reload';
       }
-
+      //-----------------------------------------------------------------------------------------------
       await web.page.waitFor(2000);
       await Promise.all([
         web.page.waitForNavigation({ waitUntil: waitUntil, timeout: timeout }),
@@ -51,11 +53,16 @@ exports.click = (
       });
 
       if (check != '')
-        await web.page.waitFor(check).catch(() => {
-          console.log('not appear!');
-        });
+        await web.page
+          .waitFor(check)
+          .catch(() => {
+            console.log('not appear!');
+          })
+          .then(() => {
+            success = true;
+          });
       await web.page.waitFor(1000);
-      resolve();
+      resolve(success);
     })
   );
 };

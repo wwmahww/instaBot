@@ -1,6 +1,7 @@
 const path = require('../../utils/direction');
+const act = require('../../utils/action');
 const web = require('../../utils/interfaces');
-const likeAndComment = require('./likeAndCommentPro');
+const comment_post = require('./commnet_post');
 const _error = require('../../utils/errorClass');
 const catchAsync = require('../../utils/catchAsync');
 
@@ -19,15 +20,19 @@ module.exports = tags =>
             'article > div:nth-child(3) img[decoding="auto"]'
           );
           let post = posts[i];
-          await likeAndComment(post);
-          // await web.page.goBack({ waitUntil: 'laod' });
-          // await web.page.goBack({ waitUntil: 'laod' });
-          await path.goto_page(
-            web.TAG_URL(tag),
-            'div canvas',
-            30000,
-            'networkidle0'
-          );
+          await path.click(post, 'section  section svg', 10000);
+          await web.page.waitFor(2000);
+          await act.like();
+          await comment_post();
+          await web.page.goBack({ waitUntil: 'load' });
+          await web.page.waitFor(2000);
+          await web.page.goBack({ waitUntil: 'load' });
+          // await path.goto_page(
+          //   web.TAG_URL(tag),
+          //   'div canvas',
+          //   30000,
+          //   'networkidle0'
+          // );
           await web.page.waitFor(1000);
         }
       }

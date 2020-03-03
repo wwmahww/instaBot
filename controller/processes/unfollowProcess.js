@@ -65,6 +65,7 @@ module.exports = () =>
 
         for (let i = buttons.length; i >= 0; i--) {
           console.log('5');
+          console.log('unfollowed: ', unfollowed);
           let button = buttons[i - 1];
           let name = names[i - 1];
           name = await web.page.evaluate(name => name.textContent, name);

@@ -1,10 +1,10 @@
-const CronJob = require('Cron').CronJob;
+// const CronJob = require('Cron').CronJob;
 
 const handler = require('./handler');
 const catchAsync = require('./utils/catchAsync');
 const web = require('./utils/interfaces');
 
-let tagsApages = ['film_bazzan', '#car'];
+let targets = ['#car', 'film_bazzan'];
 const tags = ['فیلم', 'مووی'];
 const username = web.pageName;
 const password = '!23M78i90';
@@ -30,9 +30,9 @@ web.username = username;
 catchAsync(async () => {
   await handler.initialize();
   await handler.login(username, password);
-  await handler.follow(tagsApages);
+  // await handler.follow(targets);
   // await handler.unfollow();
-  // await handler.likeTags(tags);
+  await handler.likeTags(tags);
   // const followProcess = new job('0 7 13 * * *', () => {ig.followProcess(['car'])});
   // const unfollowProcess = new job('0 10 13 * * *', ig.unfollowProcess);
   // const likeAndCommentProcess = new job('0 13 13 * * *', () => {ig.likeTagsProcess(['cars'])});

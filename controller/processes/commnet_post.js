@@ -8,17 +8,20 @@ module.exports = () => {
   return new Promise(
     catchAsync(async (resolve, reject) => {
       console.log('commentPost started');
-
+      await web.page.waitFor(2000);
       let link = await web.page.$('svg[aria-label="Comment"]');
       if (link) {
         console.log('inside of comment');
         // Add commnet
         await path.click('svg[aria-label="Comment"]', 'textarea');
         await web.page.waitFor(1000);
-        //      write the comment
+        // write the comment
         await act.comment();
+        console.log('done');
+        resolve();
+        return;
       }
-      console.log('done');
+      console.log('failed');
       resolve();
     })
   );

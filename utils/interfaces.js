@@ -14,5 +14,6 @@ module.exports = {
   notFollowBusinessPage: false, // If it should follow the buisness pages
   notFollowPrivatePage: true, // If it should follow the private pages
   comments: [''],
-  comment_text: 'perfect'
+  comment_text: 'perfect',
+  likeLastPost: true
 };

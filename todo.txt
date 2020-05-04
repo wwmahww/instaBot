@@ -1,0 +1,12 @@
+* refactor robot so it does not close and reopne browser each time that user stop the bot.
++ add following speed controller
++ add set start to unfollow after a certain number
+	+*** add cycle animation to something happening       | done
+	** check comment action			| Done
+-**** fix update user
++ make site to start bot using pm2
+* managing robot need to better
+*** add stop for robot when robot been ban
+**** refactor bot so the number that it work with is more random. like follow limit
+**** make robot to start at diffrent minits
+#BUG new robots dont load in robots page, because it needs some seconds.
